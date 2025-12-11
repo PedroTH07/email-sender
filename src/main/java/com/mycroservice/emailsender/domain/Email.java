@@ -6,25 +6,47 @@ import java.time.Instant;
 import java.util.List;
 
 public class Email {
-    private String from;
-    private List<String> to;
-    private String subject;
-    private String body;
-    private Instant sentAt;
-    private List<MultipartFile> attachment;
+    private final String from = "noreply@gmail.com";
+    private final List<String> to;
+    private final String subject;
+    private final String body;
+    private final Instant sentAt;
+    private final List<MultipartFile> attachment;
 
     public Email(
-            String from,
             List<String> to,
             String subject,
             String body,
             Instant sentAt,
             List<MultipartFile> attachment) {
-        this.from = from;
         this.to = to;
         this.subject = subject;
         this.body = body;
         this.sentAt = sentAt;
         this.attachment = attachment;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public List<String> getTo() {
+        return to;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public Instant getSentAt() {
+        return sentAt;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public List<MultipartFile> getAttachment() {
+        return attachment;
     }
 }
