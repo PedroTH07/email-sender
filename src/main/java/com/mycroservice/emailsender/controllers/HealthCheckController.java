@@ -1,4 +1,4 @@
-package com.mycroservice.emailsender.adapters.inbound;
+package com.mycroservice.emailsender.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

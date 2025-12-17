@@ -1,6 +1,5 @@
-package com.mycroservice.emailsender.adapters.outbound;
+package com.mycroservice.emailsender.infrastructure;
 
-import com.mycroservice.emailsender.ports.EmailSenderPort;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;

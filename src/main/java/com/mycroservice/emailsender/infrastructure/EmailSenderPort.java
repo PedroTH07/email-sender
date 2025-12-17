@@ -1,4 +1,4 @@
-package com.mycroservice.emailsender.ports;
+package com.mycroservice.emailsender.infrastructure;
 
 import org.springframework.mail.SimpleMailMessage;
 
