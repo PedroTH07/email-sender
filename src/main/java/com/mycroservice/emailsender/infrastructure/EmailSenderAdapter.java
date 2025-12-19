@@ -1,6 +1,6 @@
 package com.mycroservice.emailsender.infrastructure;
 
-import org.springframework.mail.SimpleMailMessage;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,12 @@ public class EmailSenderAdapter implements EmailSenderPort {
     }
 
     @Override
-    public void send(SimpleMailMessage message) {
+    public void send(MimeMessage message) {
         this.mailSender.send(message);
+    }
+
+    @Override
+    public MimeMessage createMimeMessage() {
+        return this.mailSender.createMimeMessage();
     }
 }

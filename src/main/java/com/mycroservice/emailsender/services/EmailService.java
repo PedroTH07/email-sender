@@ -4,13 +4,14 @@ import com.mycroservice.emailsender.persistence.EmailEntity;
 import com.mycroservice.emailsender.persistence.EmailRepository;
 import com.mycroservice.emailsender.dto.EmailRequestDto;
 import com.mycroservice.emailsender.infrastructure.EmailSenderPort;
-import org.springframework.mail.SimpleMailMessage;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class EmailService implements EmailUseCase {
@@ -23,15 +24,22 @@ public class EmailService implements EmailUseCase {
     }
 
     @Override
-    public UUID send(EmailRequestDto email) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("pedro.mape7@gmail.com");
-        message.setTo(email.to().toArray(new String[0]));
-        message.setSubject(email.subject());
-        message.setText(email.body());
-        message.setSentDate(new Date());
+    public UUID send(EmailRequestDto email, List<MultipartFile> attachment) {
+        try {
+            MimeMessage message = sender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom("pedro.mape7@gmail.com");
+            helper.setTo(email.to().toArray(new String[0]));
+            helper.setSubject(email.subject());
+            helper.setText(email.body(), true);
+            helper.setSentDate(new Date());
+            attachment.forEach(file -> addAttachment(file, helper));
 
-        sender.send(message);
+            sender.send(message);
+        } catch (MessagingException e) {
+            return null;
+        }
+
         return save(email);
     }
 
@@ -50,5 +58,12 @@ public class EmailService implements EmailUseCase {
     public EmailEntity getEmail(UUID id) {
         Optional<EmailEntity> email = repository.findById(id);
         return email.orElse(null);
+    }
+
+    private void addAttachment(MultipartFile file, MimeMessageHelper helper) {
+        try {
+            String originalFilename = Objects.requireNonNull(file.getOriginalFilename());
+            helper.addAttachment(originalFilename, file);
+        } catch (MessagingException | NullPointerException ignored) { }
     }
 }

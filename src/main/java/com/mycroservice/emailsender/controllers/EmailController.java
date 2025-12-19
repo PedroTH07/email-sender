@@ -4,10 +4,13 @@ import com.mycroservice.emailsender.persistence.EmailEntity;
 import com.mycroservice.emailsender.services.EmailUseCase;
 import com.mycroservice.emailsender.dto.EmailRequestDto;
 import com.mycroservice.emailsender.dto.EmailResponseDto;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -20,8 +23,10 @@ public class EmailController {
     }
 
     @PostMapping
-    public ResponseEntity<EmailResponseDto> sendEmail(@RequestBody EmailRequestDto data) {
-        String location = "v1/email/" + service.send(data);
+    public ResponseEntity<EmailResponseDto> sendEmail(
+            @ModelAttribute @Valid EmailRequestDto data,
+            @RequestPart(value = "attachment", required = false) List<MultipartFile> attachment) {
+        String location = "v1/email/" + service.send(data, attachment);
         var response = new EmailResponseDto("sent", location, Instant.now());
         return ResponseEntity.ok(response);
     }

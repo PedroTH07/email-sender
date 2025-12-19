@@ -1,7 +1,9 @@
 package com.mycroservice.emailsender.infrastructure;
 
-import org.springframework.mail.SimpleMailMessage;
+import jakarta.mail.internet.MimeMessage;
 
 public interface EmailSenderPort {
-    void send(SimpleMailMessage message);
+    void send(MimeMessage message);
+
+    MimeMessage createMimeMessage();
 }
