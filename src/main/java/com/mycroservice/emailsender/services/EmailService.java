@@ -10,6 +10,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.*;
 
@@ -24,23 +26,24 @@ public class EmailService implements EmailUseCase {
     }
 
     @Override
-    public UUID send(EmailRequestDto email, List<MultipartFile> attachment) {
+    public UUID send(EmailRequestDto email, MultipartFile html) {
         try {
+            String body = this.validateBody(email.body(), html);
+
             MimeMessage message = sender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom("pedro.mape7@gmail.com");
             helper.setTo(email.to().toArray(new String[0]));
             helper.setSubject(email.subject());
-            helper.setText(email.body(), true);
+            helper.setText(body, true);
             helper.setSentDate(new Date());
-            attachment.forEach(file -> addAttachment(file, helper));
 
             sender.send(message);
         } catch (MessagingException e) {
             return null;
         }
 
-        return save(email);
+        return this.save(email);
     }
 
     @Override
@@ -60,10 +63,13 @@ public class EmailService implements EmailUseCase {
         return email.orElse(null);
     }
 
-    private void addAttachment(MultipartFile file, MimeMessageHelper helper) {
+    private String validateBody(String body, MultipartFile html) {
         try {
-            String originalFilename = Objects.requireNonNull(file.getOriginalFilename());
-            helper.addAttachment(originalFilename, file);
-        } catch (MessagingException | NullPointerException ignored) { }
+            return html != null
+                    ? new String(html.getInputStream().readAllBytes(), StandardCharsets.UTF_8)
+                    : body;
+        } catch (IOException e) {
+            return "erro no servidor ao validar o arquivo";
+        }
     }
 }

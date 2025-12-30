@@ -1,6 +1,7 @@
 package com.mycroservice.emailsender.persistence;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.util.List;
@@ -21,7 +22,8 @@ public class EmailEntity {
 
     private String subject;
     private Instant sentAt;
-    private final Instant timestamp = Instant.now();
+    @CreationTimestamp
+    private Instant timestamp;
 
     public EmailEntity() {
     }

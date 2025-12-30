@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,10 +22,9 @@ public class EmailController {
     }
 
     @PostMapping
-    public ResponseEntity<EmailResponseDto> sendEmail(
-            @ModelAttribute @Valid EmailRequestDto data,
-            @RequestPart(value = "attachment", required = false) List<MultipartFile> attachment) {
-        String location = "v1/email/" + service.send(data, attachment);
+    public ResponseEntity<EmailResponseDto> sendEmail(@ModelAttribute @Valid EmailRequestDto data,
+                                                      @RequestPart(required = false) MultipartFile html) {
+        String location = "v1/email/" + service.send(data, html);
         var response = new EmailResponseDto("sent", location, Instant.now());
         return ResponseEntity.ok(response);
     }
