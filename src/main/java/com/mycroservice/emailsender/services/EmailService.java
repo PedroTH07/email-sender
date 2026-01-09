@@ -63,6 +63,16 @@ public class EmailService implements EmailUseCase {
         return email.orElse(null);
     }
 
+    @Override
+    public List<EmailEntity> getAll() {
+        return this.repository.findAll();
+    }
+
+//    public DeliveryResponseDto emailDelivery() {
+//        var emailAmount = this.repository.countEmailEntity();
+//        var firstDay = this.repository.
+//    }
+
     private String validateBody(String body, MultipartFile html) {
         try {
             return html != null

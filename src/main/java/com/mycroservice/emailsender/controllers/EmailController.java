@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -36,4 +37,14 @@ public class EmailController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping
+    public ResponseEntity<List<EmailEntity>> getAll() {
+        var emails = this.service.getAll();
+        return ResponseEntity.ok(emails);
+    }
+
+//    @GetMapping("metrics/delivery")
+//    public ResponseEntity<?> emailDelivery() {
+//        return null;
+//    }
 }
