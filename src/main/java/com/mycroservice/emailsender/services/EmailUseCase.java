@@ -1,7 +1,7 @@
 package com.mycroservice.emailsender.services;
 
+import com.mycroservice.emailsender.dto.DeliveryResponseDto;
 import com.mycroservice.emailsender.dto.EmailRequestDto;
-import com.mycroservice.emailsender.dto.EmailResponseDto;
 import com.mycroservice.emailsender.persistence.EmailEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,4 +16,6 @@ public interface EmailUseCase {
     EmailEntity getEmail(UUID id);
 
     List<EmailEntity> getAll();
+
+    DeliveryResponseDto emailDelivery();
 }

@@ -1,5 +1,6 @@
 package com.mycroservice.emailsender.controllers;
 
+import com.mycroservice.emailsender.dto.DeliveryResponseDto;
 import com.mycroservice.emailsender.persistence.EmailEntity;
 import com.mycroservice.emailsender.services.EmailUseCase;
 import com.mycroservice.emailsender.dto.EmailRequestDto;
@@ -43,8 +44,9 @@ public class EmailController {
         return ResponseEntity.ok(emails);
     }
 
-//    @GetMapping("metrics/delivery")
-//    public ResponseEntity<?> emailDelivery() {
-//        return null;
-//    }
+    @GetMapping("metrics/delivery")
+    public ResponseEntity<DeliveryResponseDto> emailDelivery() {
+        var response = service.emailDelivery();
+        return ResponseEntity.ok(response);
+    }
 }

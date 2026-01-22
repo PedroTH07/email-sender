@@ -1,17 +1,22 @@
 package com.mycroservice.emailsender.services;
 
+import com.mycroservice.emailsender.dto.DeliveryResponseDto;
 import com.mycroservice.emailsender.persistence.EmailEntity;
 import com.mycroservice.emailsender.persistence.EmailRepository;
 import com.mycroservice.emailsender.dto.EmailRequestDto;
 import com.mycroservice.emailsender.infrastructure.EmailSenderPort;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
@@ -68,10 +73,22 @@ public class EmailService implements EmailUseCase {
         return this.repository.findAll();
     }
 
-//    public DeliveryResponseDto emailDelivery() {
-//        var emailAmount = this.repository.countEmailEntity();
-//        var firstDay = this.repository.
-//    }
+    @Override
+    public DeliveryResponseDto emailDelivery() {
+        var firstSent = repository.getFirstSent(PageRequest.of(0, 1));
+        if (firstSent.isEmpty()) {
+            return new DeliveryResponseDto(0L, 0L, new BigDecimal("0.0"));
+        }
+        var days = Duration.between(firstSent.getContent().getFirst(), Instant.now()).toDays();
+        if (days == 0) days = 1;
+        var emailAmount = this.repository.countEmailEntity();
+
+        var deliveryTax = BigDecimal
+                .valueOf(emailAmount)
+                .divide(BigDecimal.valueOf(days), RoundingMode.HALF_UP);
+
+        return new DeliveryResponseDto(emailAmount, days, deliveryTax);
+    }
 
     private String validateBody(String body, MultipartFile html) {
         try {

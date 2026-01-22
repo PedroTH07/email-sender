@@ -47,7 +47,7 @@ public class EmailEntity {
         return subject;
     }
 
-    private Instant getSentAt() {
+    public Instant getSentAt() {
         return sentAt;
     }
 
