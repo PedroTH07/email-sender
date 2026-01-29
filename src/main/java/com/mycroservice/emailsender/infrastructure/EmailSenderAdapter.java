@@ -13,12 +13,13 @@ public class EmailSenderAdapter implements EmailSenderPort {
     }
 
     @Override
+    public MimeMessage createMimeMessage() {
+        return this.mailSender.createMimeMessage();
+    }
+    @Override
     public void send(MimeMessage message) {
         this.mailSender.send(message);
     }
 
-    @Override
-    public MimeMessage createMimeMessage() {
-        return this.mailSender.createMimeMessage();
-    }
+
 }
