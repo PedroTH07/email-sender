@@ -36,7 +36,7 @@ public class EmailService implements EmailUseCase {
             String body = this.validateBody(email.body(), html);
 
             MimeMessage message = sender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            MimeMessageHelper helper = createHelper(message);
             helper.setFrom("pedro.mape7@gmail.com");
             helper.setTo(email.to().toArray(new String[0]));
             helper.setSubject(email.subject());
@@ -98,5 +98,9 @@ public class EmailService implements EmailUseCase {
         } catch (IOException e) {
             return "erro no servidor ao validar o arquivo";
         }
+    }
+
+    protected MimeMessageHelper createHelper(MimeMessage message) throws MessagingException {
+        return new MimeMessageHelper(message, true);
     }
 }
