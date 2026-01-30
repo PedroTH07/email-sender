@@ -136,5 +136,26 @@ class EmailServiceTest {
             verify(sender, times(0)).send(any());
         }
 
+        @Test
+        @DisplayName("Should throw exception when error occurs")
+        void shouldThrowsExceptionWhenErrorOccurs() throws Exception {
+            // Arrange
+            var emailDto = new EmailRequestDto(
+                    List.of("pedro.mape7@gmail.com"),
+                    "subject",
+                    "body"
+            );
+            var session = Session.getInstance(new Properties());
+            when(sender.createMimeMessage()).thenReturn(new MimeMessage(session));
+            doThrow(RuntimeException.class).when(sender).send(any());
+
+            // Act
+            assertThrows(RuntimeException.class, () -> service.send(emailDto, null));
+
+            // Assert
+            verify(service, times(0)).save(emailDto);
+            verify(sender, times(1)).send(any());
+        }
+
     }
 }
