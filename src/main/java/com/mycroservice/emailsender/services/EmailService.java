@@ -30,6 +30,7 @@ public class EmailService implements EmailUseCase {
         this.repository = repository;
     }
 
+    // if "email" null, NPE, should verify this
     @Override
     public UUID send(EmailRequestDto email, MultipartFile html) {
         try {
@@ -51,6 +52,7 @@ public class EmailService implements EmailUseCase {
         return this.save(email);
     }
 
+    // if "data" null, NPE, should verify this
     @Override
     public UUID save(EmailRequestDto data) {
         var email = new EmailEntity();
